@@ -1,40 +1,24 @@
-name: printing context values of github
-run-name: 06-context | DEBUG - ${{ inputs.debug }}
+name: execution
 
 on: 
-  push:
   workflow_dispatch:
-    inputs:
-      debug:
-        type: boolean
-        default: false
-env:
-  MY_var: 'rajesh'
-  MY_OVERWRITTENVAR: 'workflow-lvl'
 
 jobs:
-  echo-data:
+  job1:
     runs-on: ubuntu-latest
-    env:
-      MY_JOBVAR: 'rajesh-jobvar'
-      MY_OVERWRITTENVAR: 'job-lvl'
-
     steps:
-      - name: display information
-        run: |
-         echo " EVENT NAME: ${{ github.event_name }}"
-         echo "Ref: ${{ github.ref }}"
-         echo " sha: ${{ github.sha }}"
-         echo "actor: ${{ github.actor }}"
-         echo " workflow: ${{ github.workflow }}"
-         echo "RUN ID: ${{ github.run_id}}"
-         echo "run number : ${{github.run_number}}"
-      - name: retrieving variable
-        run: |
-          echo "var: ${{vars.MY_env}}"
-      - name: printing env values
-        env:
-          MY_OVERWRITTENVAR: step-lvl
-        run: |
-         echo "MY_VAR : ${{ env.MY_var }}"
-         echo "MY_OVERWRITTENVAR: ${{ env.MY_OVERWRITTENVAR}}"
+      - name: step1 
+        run: echo "i am job1"
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - name: step2
+        run: echo " i am job2"
+  job3:
+    needs: job2
+    runs-on: ubuntu-latest
+    steps:
+      - name: step3
+        run: echo "i am job3"
+     
