@@ -36,5 +36,5 @@ jobs:
         env:
           MY_OVERWRITTENVAR: step-lvl
         run: |
-         echo "MY_VAR : ${{ ENV.MY_VAR }}"
+         echo "MY_VAR : ${{ env.MY_VAR }}"
          echo "MY_OVERWRITTENVAR: ${{ env.MY_OVERWRITTENVAR}}"
