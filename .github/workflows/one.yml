@@ -1,24 +1,28 @@
-name: execution
+name: inputs
 
 on: 
   workflow_dispatch:
+    inputs:
+      input1:
+        type: boolean
+        description: say yes or no
+        default: false
+      input2:
+        type: environment
+        required: true
+        description: which enviroment to deploy
+      input3:
+        type: choice
+        options:
+          - v1
+          - v2
+          - v3
+        default: v3
 
 jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - name: step1 
-        run: echo "i am job1"
-  job2:
-    needs: job1
-    runs-on: ubuntu-latest
-    steps:
-      - name: step2
-        run: echo " i am job2"
-  job3:
-    needs: job2
-    runs-on: ubuntu-latest
-    steps:
-      - name: step3
-        run: echo "i am job3"
-     
+      - name: hello world
+        run: echo "hello world"
+
