@@ -8,10 +8,17 @@ on:
       debug:
         type: boolean
         default: false
+env:
+  MY_var: 'rajesh'
+  MY_OVERWRITTENVAR: 'workflow-lvl'
 
 jobs:
   echo-data:
     runs-on: ubuntu-latest
+    env:
+      MY_JOBVAR: 'rajesh-jobvar'
+      MY_OVERWRITTENVAR: 'job-lvl'
+
     steps:
       - name: display information
         run: |
@@ -25,3 +32,9 @@ jobs:
       - name: retrieving variable
         run: |
           echo "var: ${{vars.MY_env}}"
+      - name: printing env values
+        env:
+          MY_OVERWRITTENVAR: step-lvl
+        run: |
+         echo "MY_VAR : ${{ ENV.MY_VAR }}"
+         echo "MY_OVERWRITTENVAR: ${{ env.MY_OVERWRITTENVAR}}"
