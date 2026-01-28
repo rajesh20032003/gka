@@ -11,6 +11,7 @@ on:
         type: environment
         required: true
         description: which enviroment to deploy
+        default: stage
       input3:
         type: choice
         options:
