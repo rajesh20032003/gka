@@ -1,6 +1,8 @@
 name: printing context values of github
 
-on: push
+on: 
+  push:
+  workflow_dispatch:
 
 jobs:
   echo-data:
