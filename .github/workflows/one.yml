@@ -1,0 +1,20 @@
+name: printing context values of github
+
+on: push
+
+jobs:
+  echo-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: display information
+        run: |
+         echo " EVENT NAME: ${{ github.event_name }}"
+         echo "Ref: ${{ github.ref }}"
+         echo " sha: ${{ github.sha }}"
+         echo "actor: ${{ github.actor }}"
+         echo " workflow: ${{ github.workflow }}"
+         echo "RUN ID: ${{ github.run_id}}"
+         echo "run number : ${{github.run_number}}"
+      - name: retrieving variable
+        run: |
+          echo "var: ${{vars.MY_env}}"
