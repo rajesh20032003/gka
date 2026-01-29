@@ -33,3 +33,15 @@ jobs:
         run: |
          echo running test on ${{matrix.os}} with ${{matrix.node-version}}
          sleep 10
+
+  include-example:
+    name: ${{matrix.color}}-${{matrix.shape}}-${{matrix.size}}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        color: [red, green]
+        shape: [circle, square]
+        size: [small, large]
+        include:
+          - color: red
+            shape: traingle
