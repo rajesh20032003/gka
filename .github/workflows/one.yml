@@ -1,20 +1,22 @@
-name: environment
+name: env multi stage
 
 on:
   workflow_dispatch:
-    inputs:
-      target-env:
-        type: environment
-        default: staging
+    
 
 jobs:
-  echo:
-    runs-on: ubuntu-latest
-    environment: ${{inputs.target-env}}
-    env:
-      my-env-value: ${{vars.MY_ENV_VALUE || 'default-value'}}
+  staging:
+    runs-on: ubuntu
+    environment: staging
     steps:
-      - name: echho env
-        run: echo "${{inputs.target-env}}"
-      - name: echo var
-        run: echo "${{env.my-env-value}}"
+      - name: echo
+        run: |
+         echo "stagging done"
+         sleep 10
+  deploy:
+    runs-on: ubuntu-latest
+    needs: staging
+    environment: PROD
+    steps:
+      - name: echo
+        run: echo "deployed to prod"
