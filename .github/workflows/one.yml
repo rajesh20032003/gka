@@ -1,47 +1,20 @@
-name: matrix
+name: environment
 
 on:
   workflow_dispatch:
+    inputs:
+      target-env:
+        type: environment
+        default: staging
 
 jobs:
-  matrix-job:
-    name: ${{matrix.os}}-${{matrix.node-version}}
-    runs-on: ${{matrix.os}}
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [18.x, 20.x, 21.x]
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-        include:
-          - os: ubuntu-latest
-            node-version: 16.x
-          - os: ubuntu-latest
-            node-version: 21.x
-            tag: experimental
-    steps:
-      - name: setup node
-        uses: actions/setup-node@v4
-        with: 
-          node-version: ${{ matrix.node-version }}
-      - name: experimental
-        if: matrix.tag == 'experimental'
-        run: exit 1
-      - name: perform some test
-        run: |
-         echo running test on ${{matrix.os}} with ${{matrix.node-version}}
-         sleep 10
-
-  include-example:
-    name: ${{matrix.color}}-${{matrix.shape}}-${{matrix.size}}
+  echo:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        color: [red, green]
-        shape: [circle, square]
-        size: [small, large]
-        include:
-          - color: red
-            shape: traingle
+    environment: ${{inputs.target-env}}
+    env:
+      my-env-value: ${{vars.MY_ENV_VALUE || 'default-value'}}
+    steps:
+      - name: echho env
+        run: echo "${{inputs.target-env}}"
+      - name: echo var
+        run: echo "${{env.my-env-value}}"
