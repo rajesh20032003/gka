@@ -6,7 +6,7 @@ on:
 
 jobs:
   staging:
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     environment: staging
     steps:
       - name: echo
