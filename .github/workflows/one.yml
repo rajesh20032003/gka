@@ -1,50 +1,22 @@
-name: artifacts
+name: matrix
 
-on :
+on:
   workflow_dispatch:
 
-
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-       working-directory: artifacts/react-app
+  matrix-job:
+    name: ${{matrix.os}}-${{matrix.node-version}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 21.x]
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
     steps:
-      - name: checkout code
-        uses: actions/checkout@v4
       - name: setup node
         uses: actions/setup-node@v4
-        with:
-          node-version: '24.x'
-      - name: download cached dependencies
-        uses: actions/cache@v4
-        id: cache
-        with:
-          path: artifacts/react-app
-          key: dep-modules-${{hashFiles('artifacts/react-app/node_modules')}}
-      - name: install dependenices
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-      - name: run test
-        run: npm run test
-      - name: build code
-        run: npm run build
-      - name: upload code artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: app
-          path: artifacts/react-app/build
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    name: download code
-    steps:
-      - name: download code
-        uses: actions/download-artifact@v4
-        with:
-          name: app
-          path: build
-      - name: display folder structure
-        run: ls -R
+        with: ${{ matrix.node-version }}
+      - name: perform some test
+        run: echo running test on ${{matrix.os}} with ${{matrix.node-version}}
