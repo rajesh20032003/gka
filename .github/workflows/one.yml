@@ -1,39 +1,49 @@
-name: caching
+name: artifacts
 
-on: 
+on :
   workflow_dispatch:
-    inputs:
-      use-cache:
-        description: use cache or not
-        type: boolean
-        default: true
+
+
 
 jobs:
-  job1:
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
-       working-directory: caching/react-app
+       working-directory: artifacts/react-app
     steps:
       - name: checkout code
         uses: actions/checkout@v4
-      - name: set up node
-        uses: actions/setup-node@v3
+      - name: setup node
+        uses: actions/setup-node@v4
         with:
           node-version: '24.x'
-      - name: download cache
-        uses: actions/cache@v3
-        if: ${{ inputs.use-cache }}
+      - name: download cached dependencies
+        uses: actions/cache@v4
         id: cache
         with:
-           path: caching/react-app/node_modules
-           key: deps-node-modules-${{ hashFiles('caching/react-app/package-lock.json')}}
+          path: artifacts/react-app
+          key: dep-modules-${{hashFiles('artifacts/react-app/node_modules')}}
       - name: install dependenices
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
-      - name: testing
+      - name: run test
         run: npm run test
-      - name: building
+      - name: build code
         run: npm run build
-      - name: deploy
-        run: echo "deployed to pod"
+      - name: upload code artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: caching/react-app/build
+  deploy:
+    runs-on: ubuntu-latest
+    name: download code
+    steps:
+      - name: download code
+        uses: actions/download-artifact@v4
+        with:
+          name: app
+          path: build
+      - name: display folder structure
+        run: ls -R
