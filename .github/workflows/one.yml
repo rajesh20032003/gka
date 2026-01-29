@@ -38,6 +38,7 @@ jobs:
           path: caching/react-app/build
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     name: download code
     steps:
       - name: download code
